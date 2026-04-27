@@ -77,6 +77,23 @@
                         checkbox.addEventListener('change', function() {
                             db.ref(dbKey + '/' + item.id).update({ checked: checkbox.checked });
                         });
+
+                        // Long-press to delete (1 second)
+                        let pressTimer = null;
+                        li.addEventListener('mousedown', function(e) {
+                            pressTimer = setTimeout(function() {
+                                if (confirm('Delete this item?')) {
+                                    db.ref(dbKey + '/' + item.id).remove();
+                                }
+                            }, 1000);
+                        });
+                        li.addEventListener('mouseup', function(e) {
+                            clearTimeout(pressTimer);
+                        });
+                        li.addEventListener('mouseleave', function(e) {
+                            clearTimeout(pressTimer);
+                        });
+
                         li.appendChild(checkbox);
                         li.appendChild(span);
                         list.appendChild(li);
